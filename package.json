@@ -1,14 +1,18 @@
 {
   "name": "@paulownia/line-stream",
+  "type": "module",
   "version": "0.1.0",
   "description": "A stream to emit text data line by line.",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint . --ext .js"
+    "test" : "npm run lint && npm run ut",
+    "lint": "eslint . --ext .js",
+    "ut": "ava"
   },
   "author": "hisanori <hisary@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "ava": "^5.3.1",
     "eslint": "^8.47.0"
   }
 }
