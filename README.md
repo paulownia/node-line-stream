@@ -15,14 +15,6 @@ lineStream.on('data', (chunk) => {
 });
 ```
 
-with for await loop
-
-```javascript
-for await (const line of lineStream) {
-    console.log(line);
-}
-```
-
 with pipe
 
 ```javascript

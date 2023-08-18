@@ -1,18 +1,24 @@
-const fs = require('fs');
-const stream = require('stream');
-const {on} = require('events');
+import fs from 'fs';
+import stream from 'stream';
 
-class LineTransform extends stream.Transform {
+export class LineTransform extends stream.Transform {
 
-  constructor(options) {
-    super(options);
-    this._separator = options.separator || '\n';
+  constructor(options = {}) {
+    const encoding = options.encoding || 'utf8';
+    const separator = options.separator || '\n';
+    const copy = Object.assign({ encoding }, options);
+    delete copy.separator;
+    super(copy);
+
+    this._separator = separator;
+    this._encoding = encoding;
     this._buffer = '';
   }
 
   _transform(chunk, encoding, done) {
     if (chunk) {
-      const lines = (this._buffer + chunk).split(this._separator);
+      const str = chunk.toString(this._encoding);
+      const lines = (this._buffer + str).split(this._separator);
       this._buffer = lines.pop();
       for (const line of lines) {
         this.push(line);
@@ -28,23 +34,16 @@ class LineTransform extends stream.Transform {
     this._buffer = '';
     done();
   }
-
-  [Symbol.asyncIterator]() {
-    return on(this, 'data');
-  }
 }
-module.exports.LineTransform = LineTransform;
 
 
-function createLineStream(input, opts = {}) {
-  const separator = opts.separator || '\n';
+export function createLineStream(input, opts = {}) {
+  const ltOpts = Object.assign({}, opts);
   const rsOpts = Object.assign({}, opts);
   delete rsOpts.separator;
 
-  const lineStream = new LineTransform({ separator });
+  const lineStream = new LineTransform(ltOpts);
   const readStream = fs.createReadStream(input, rsOpts);
   return readStream.pipe(lineStream);
 }
-
-module.exports.createLineStream = createLineStream;
 
