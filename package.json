@@ -5,7 +5,7 @@
   "description": "A stream to emit text data line by line.",
   "main": "index.js",
   "scripts": {
-    "test" : "npm run lint && npm run ut",
+    "test": "npm run lint && npm run ut",
     "lint": "eslint . --ext .js",
     "ut": "ava"
   },
@@ -14,5 +14,8 @@
   "devDependencies": {
     "ava": "^5.3.1",
     "eslint": "^8.47.0"
+  },
+  "volta": {
+    "node": "18.16.0"
   }
 }
