@@ -20,6 +20,24 @@ class TestWritable extends Writable {
   }
 }
 
+test('event',  async t => {
+  await new Promise((end, error) => {
+    const stream = createLineStream(testDataFilePath, { highWaterMark: 12 });
+    const lines = [];
+    stream.on('data', data => {
+      lines.push(data);
+    });
+    stream.on('end', () => {
+      t.is(lines.length, 3);
+      t.is(lines[0], 'line1');
+      t.is(lines[1], 'line2');
+      t.is(lines[2], 'line3');
+      end();
+    });
+    stream.on('error', error);
+  });
+  t.pass('call end event');
+});
 
 test('pipe', async t => {
   const stream = createLineStream(testDataFilePath);
